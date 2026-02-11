@@ -1,12 +1,23 @@
 package com.red.jounrnalpostgre.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-public class journalEntry {
+import java.time.LocalDateTime;
+import java.util.Date;
+
+
+//@Document(collection="journal_entry")
+@Entity
+@Table(name = "journals")
+public class JournalEntry {
     //    @NotEmpty(message = "You cannot create a journal without this")
 //    This only works on String , Arrays , Collections and etc not for other values.
     @NotNull(message = "Id cannot be null ")
+    @Id
     private long id;
     @NotNull(message = "Title cannot be null ")
     private String title;
@@ -15,6 +26,8 @@ public class journalEntry {
     @Email(message = "Please Enter a Valid Email Id ")
 //    Somehow adding a ';' will raise/create an error.
     private String emailId;
+
+    private LocalDateTime date;
 
     public String getEmailId() {
         return emailId;
@@ -46,5 +59,13 @@ public class journalEntry {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date =date ;
     }
 }
