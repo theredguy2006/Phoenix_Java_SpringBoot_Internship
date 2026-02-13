@@ -23,7 +23,7 @@ public class JournalEntryController {
 
     @GetMapping
     public List<JournalEntry> getAll() {
-        return new ArrayList<>(journalEntries.values());
+        return new ArrayList<>(journalService.getAllJournal());
     }
 
     @PostMapping
