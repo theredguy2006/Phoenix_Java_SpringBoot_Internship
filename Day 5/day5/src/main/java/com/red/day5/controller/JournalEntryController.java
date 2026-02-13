@@ -28,7 +28,7 @@ public class JournalEntryController {
     @PostMapping
     public ResponseEntity<JournalEntry> createEntry(@Valid @RequestBody JournalEntry myEntry) {
         try {
-            myEntry.setDate(LocalDateTime.now());
+            myEntry.setJournalDate(LocalDateTime.now());
             journalService.saveJournal(myEntry);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -58,24 +58,12 @@ public class JournalEntryController {
 
         JournalEntry old = journalService.getJournalById(myId).orElse(null);
         if (old != null) {
-            old.setTitle(myEntry.getTitle() != null & "".equals(myEntry.getTitle()) ? myEntry.getTitle() : old.getTitle());
-            old.setContent(myEntry.getContent() != null & "".equals(myEntry.getContent()) ? myEntry.getContent() : old.getContent());
-            old.setEmailId(myEntry.getEmailId() != null & "".equals(myEntry.getEmailId()) ? myEntry.getEmailId() : old.getEmailId());
-            old.setDate(LocalDateTime.now());
+            old.setJournalTitle(myEntry.getJournalTitle() != null & "".equals(myEntry.getJournalTitle()) ? myEntry.getJournalTitle() : old.getJournalTitle());
+            old.setJournalContent(myEntry.getJournalContent() != null & "".equals(myEntry.getJournalContent()) ? myEntry.getJournalContent() : old.getJournalContent());
+//            old.setEmailId(myEntry.getEmailId() != null & "".equals(myEntry.getEmailId()) ? myEntry.getEmailId() : old.getEmailId());
+            old.setJournalDate(LocalDateTime.now());
         }
         return journalEntries.put(myId, myEntry);
     }
 
-    // Update only email
-    @PutMapping("/email/{id}")
-    public JournalEntry updateEmail(@PathVariable long id, @RequestBody JournalEntry request) {
-
-        JournalEntry entry = journalEntries.get(id);
-
-        if (entry != null) {
-            entry.setEmailId(request.getEmailId());
-        }
-
-        return entry;
-    }
 }
