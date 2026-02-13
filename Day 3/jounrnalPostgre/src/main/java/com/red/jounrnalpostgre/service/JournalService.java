@@ -23,6 +23,7 @@ public class JournalService {
 
     }
 
+
     public Optional<JournalEntry> getJournalById(Long id) {
         return journalRepo.findById(id);
     }
