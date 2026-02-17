@@ -1,5 +1,6 @@
 package com.red.day5.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @Getter
 @Setter
+
 public class UserEntity {
 
     //    NOTE TO SELF THE NAMING CONVENTION IS WEIRD FOR ENTITY AND DON'T USE _ , - Or any of that. Idk man.
@@ -38,14 +40,14 @@ public class UserEntity {
     private Long UserId;
 
     @Column(name = "u_name", unique = true, nullable = false)
-    private String UserName;
+    private String userName;
 
     @Column(name = "emailid", nullable = false)
-    private String EmailID;
+    private String emailID;
 
     @Column(name = "u_password", nullable = false)
 
-    private Long UserPWD;
+    private Long userPwd;
 
     @Column(name = "date")
     private LocalDateTime date;
@@ -53,5 +55,7 @@ public class UserEntity {
 
     //    The Mapped By is CASE SENSITIVE !!!!!!!!!!!!!!!!!!!!!!!
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+//    TODO learn about this keyword.
+    @JsonIgnore
     private List<JournalEntry> journalEntries = new ArrayList<>();
 }

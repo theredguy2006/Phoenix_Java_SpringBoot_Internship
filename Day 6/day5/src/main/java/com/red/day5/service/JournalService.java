@@ -22,11 +22,16 @@ public class JournalService {
     //     by hand writing it and going in detail with the flow , also focus on controller
     public void saveJournal(JournalEntry journalEntry, String userName) {
         UserEntity user = userService.findByUserName(userName);
+//        Todo before adding line 26 there was an error so learn about that and try to understand it.
+        journalEntry.setUserEntity(user);
         journalEntry.setJournalDate(LocalDateTime.now());
         JournalEntry saved = journalRepo.save(journalEntry);
         user.getJournalEntries().add(saved);
         userService.saveUser(user);
     }
+
+//    Todo Learn about the flow of this program. As detailes as you can.
+//     After learning about the transactional annotation.
     public void saveJournal(JournalEntry journalEntry) {
         journalRepo.save(journalEntry);
     }
@@ -43,9 +48,9 @@ public class JournalService {
     }
 
     public void deleteByID(Long id, String userName) {
-        UserEntity user = userService.findByUserName(userName);
-        user.getJournalEntries().removeIf(x-> x.getJournalID().equals(id));
-        userService.saveUser(user);
+//        UserEntity user = userService.findByUserName(userName);
+//        user.getJournalEntries().removeIf(x-> x.getJournalID().equals(id));
+//        userService.saveUser(user);
         journalRepo.deleteById(id);
     }
 }

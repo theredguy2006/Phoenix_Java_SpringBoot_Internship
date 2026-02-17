@@ -17,16 +17,18 @@ import java.time.LocalDateTime;
 public class JournalEntry {
     //    @NotEmpty(message = "You cannot create a journal without this")
 //    This only works on String , Arrays , Collections and etc not for other values.
-    @NotNull(message = "Id cannot be null ")
+//    @NotNull(message = "Id cannot be null ")
     @Id
-    private Long JournalID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long journalID;
     @NotNull(message = "Title cannot be null ")
-    private String JournalTitle;
+    private String journalTitle;
     @NotNull(message = "content cannot be null ")
-    private String JournalContent;
-    private LocalDateTime JournalDate;
+    private String journalContent;
+    private LocalDateTime journalDate;
     @ManyToOne
-    @JoinColumn(name = "UserId")
+//    Todo Learn about how does the schema works and hand write it and then learn it.
+    @JoinColumn(name = "UserId", nullable = false)
     private UserEntity userEntity;
 
 

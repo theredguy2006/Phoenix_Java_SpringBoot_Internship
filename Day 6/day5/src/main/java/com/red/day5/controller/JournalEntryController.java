@@ -85,12 +85,14 @@ public class JournalEntryController {
 
         JournalEntry old = journalService.getJournalById(myId).orElse(null);
         if (old != null) {
-            old.setJournalTitle(myEntry.getJournalTitle() != null & "".equals(myEntry.getJournalTitle()) ? myEntry.getJournalTitle() : old.getJournalTitle());
-            old.setJournalContent(myEntry.getJournalContent() != null & "".equals(myEntry.getJournalContent()) ? myEntry.getJournalContent() : old.getJournalContent());
+            old.setJournalTitle(myEntry.getJournalTitle() != null && !myEntry.getJournalTitle().isEmpty() ? myEntry.getJournalTitle() : old.getJournalTitle());
+            old.setJournalContent(myEntry.getJournalContent() != null && !myEntry.getJournalContent().isEmpty() ? myEntry.getJournalContent() : old.getJournalContent());
             old.setJournalDate(LocalDateTime.now());
-            journalService.saveJournal(myEntry);
+            journalService.saveJournal(old);
+
         }
-        return journalEntries.put(myId, myEntry);
+        return old;
+
     }
 
 }
