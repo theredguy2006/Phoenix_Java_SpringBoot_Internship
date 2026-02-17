@@ -47,7 +47,7 @@ public class UserController {
         if (userEntityInDb != null) {
             userEntityInDb.setUserName(userEntity.getUserName());
             userEntityInDb.setEmailID(userEntity.getEmailID());
-            userEntityInDb.setUserPWD(userEntity.getUserPWD());
+            userEntityInDb.setUserPwd(userEntity.getUserPwd());
             userService.saveUser(userEntityInDb);
             return new ResponseEntity<>(userEntityInDb, HttpStatus.OK);
         }
