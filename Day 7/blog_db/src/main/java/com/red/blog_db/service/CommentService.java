@@ -26,7 +26,7 @@ public class CommentService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<CommentEntity> getAllPosts() {
+    public List<CommentEntity> getAllComments() {
 
         return new ArrayList<>(commentRepository.findAll());
     }
@@ -48,4 +48,6 @@ public class CommentService {
     public void deleteComment(Long myId) {
         userRepository.deleteById(myId);
     }
+
+
 }
