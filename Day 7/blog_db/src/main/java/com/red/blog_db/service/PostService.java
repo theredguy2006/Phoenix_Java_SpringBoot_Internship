@@ -17,6 +17,7 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+
     @Autowired
     private UserService userService;
 
@@ -30,18 +31,36 @@ public class PostService {
         return postRepository.findById(myId);
     }
 
-    public void createPost(PostEntity postEntity, String userName) {
-        UserEntity user = userService.getByUsername(userName);
-        postEntity.setUserEntity(user);
-        postRepository.save(postEntity);
+    public void createPost(PostEntity postEntity, Long myId) {
+        try {
+            UserEntity user = userService.getUserById(myId);
+            postEntity.setUserEntity(user);
+            postRepository.save(postEntity);
+        } catch (NullPointerException ne) {
+            ne.getStackTrace();
+            throw new NullPointerException();
+        } catch (Exception e) {
+            System.out.print("Unexpected Error Besides NullPointer Exception " + e);
+            e.getStackTrace();
+            System.out.println("Above is the stack Trace ");
+        }
     }
 
-    public void updateUserByPostname(PostEntity postEntity, Long  myId) {
-        PostEntity post = postRepository.findByPostId(myId);
-        post.setPostTitle(postEntity.getPostTitle());
-        post.setPostBody(postEntity.getPostBody());
-        post.setPostTime(LocalDateTime.now());
-        postRepository.save(post);
+    public void updatePostById(PostEntity postEntity, Long myId) {
+        try {
+            PostEntity post = postRepository.findByPostId(myId);
+            post.setPostTitle(postEntity.getPostTitle());
+            post.setPostBody(postEntity.getPostBody());
+            post.setPostTime(LocalDateTime.now());
+            postRepository.save(post);
+        } catch (NullPointerException ne) {
+            ne.getStackTrace();
+            throw new NullPointerException();
+        } catch (Exception e) {
+            System.out.print("Unexpected Error Besides NullPointer Exception " + e);
+            e.getStackTrace();
+            System.out.println("Above is the stack Trace ");
+        }
     }
 
 
