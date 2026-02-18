@@ -38,11 +38,21 @@ public class CommentService {
 
     public void createComment(Long myId, Long postId, CommentEntity commentEntity) {
 
-        UserEntity user = userRepository.findByUserId(myId);
-        PostEntity post = postRepository.findByPostId(postId);
-        commentEntity.setUserEntity(user);
-        commentEntity.setPostEntity(post);
-        commentRepository.save(commentEntity);
+        try {
+            UserEntity user = userRepository.findByUserId(myId);
+            PostEntity post = postRepository.findByPostId(postId);
+            commentEntity.setUserEntity(user);
+            commentEntity.setPostEntity(post);
+            commentRepository.save(commentEntity);
+        } catch (NullPointerException ne) {
+            ne.getStackTrace();
+            throw new NullPointerException();
+        } catch(Exception e)
+        {
+            System.out.print("Unexpected Error Besides NullPointer Exception "+e);
+            e.getStackTrace();
+            System.out.println("Above is the stack Trace ");
+        }
     }
 
     public void deleteComment(Long myId) {

@@ -30,7 +30,7 @@ public class CommentController {
         commentService.deleteComment(myId);
     }
 
-    @PostMapping("/postid/{postId}/username/{myId}")
+    @PostMapping("/postid/{postId}/userid/{myId}")
     public void createPost(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
         commentService.createComment(postId, myId, commentEntity);
     }

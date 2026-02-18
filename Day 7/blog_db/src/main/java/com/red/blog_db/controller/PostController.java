@@ -30,14 +30,14 @@ public class PostController {
         postService.deletePost(myId);
     }
 
-    @PostMapping("/username/{userName}")
-    public void createPost(@Valid @RequestBody PostEntity postEntity, @PathVariable String userName) {
-        postService.createPost(postEntity, userName);
+    @PostMapping("/id/{myId}")
+    public void createPost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long myId) {
+        postService.createPost(postEntity, myId);
     }
 
     @PutMapping("/postid/{postid}")
     public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long postid) {
-        postService.updateUserByPostname(postEntity, postid);
+        postService.updatePostById(postEntity, postid);
     }
 
 

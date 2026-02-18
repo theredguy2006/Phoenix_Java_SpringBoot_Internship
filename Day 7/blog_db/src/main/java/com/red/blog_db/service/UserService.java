@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,8 +19,8 @@ public class UserService {
         return new ArrayList<>(userRepository.findAll());
     }
 
-    public Optional<UserEntity> getUserById(Long myId) {
-        return userRepository.findById(myId);
+    public UserEntity getUserById(Long myId) {
+        return userRepository.findByUserId(myId);
     }
 
     public void createUser(UserEntity userEntity) {
@@ -30,11 +29,20 @@ public class UserService {
     }
 
     public void updateUserByUsername(UserEntity userEntity, Long myId) {
-        UserEntity user = userRepository.findByUserId(myId);
-        user.setUserName(userEntity.getUserName());
-        user.setUserPwd(userEntity.getUserPwd());
-        user.setEmailId(userEntity.getEmailId());
-        userRepository.save(user);
+        try {
+            UserEntity user = userRepository.findByUserId(myId);
+            user.setUserName(userEntity.getUserName());
+            user.setUserPwd(userEntity.getUserPwd());
+            user.setEmailId(userEntity.getEmailId());
+            userRepository.save(user);
+        } catch (NullPointerException ne) {
+            ne.getStackTrace();
+            throw new NullPointerException();
+        } catch (Exception e) {
+            System.out.print("Unexpected Error Besides NullPointer Exception " + e);
+            e.getStackTrace();
+            System.out.println("Above is the stack Trace ");
+        }
     }
 
     public void deleteUser(Long myId) {
