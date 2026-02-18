@@ -36,17 +36,17 @@ public class CommentService {
         return commentRepository.findById(myId);
     }
 
-    public void createComment(String postTitle, String userName, CommentEntity commentEntity) {
+    public void createComment(Long myId, Long postId, CommentEntity commentEntity) {
 
-        UserEntity user = userRepository.findByUserName(userName);
-        PostEntity post = postRepository.findByPostTitle(postTitle);
+        UserEntity user = userRepository.findByUserId(myId);
+        PostEntity post = postRepository.findByPostId(postId);
         commentEntity.setUserEntity(user);
         commentEntity.setPostEntity(post);
         commentRepository.save(commentEntity);
     }
 
     public void deleteComment(Long myId) {
-        userRepository.deleteById(myId);
+        commentRepository.deleteById(myId);
     }
 
 

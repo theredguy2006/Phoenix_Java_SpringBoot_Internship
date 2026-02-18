@@ -37,8 +37,8 @@ public class UserController {
         userService.deleteUser(myId);
     }
 
-    @PutMapping("/username/{username}")
-    public void updateUser(@PathVariable String username, @RequestBody UserEntity userEntity) {
-        userService.updateUserByUsername(userEntity, username);
+    @PutMapping("/id/{myId}")
+    public void updateUser(@PathVariable Long myId, @RequestBody UserEntity userEntity) {
+        userService.updateUserByUsername(userEntity, myId);
     }
 }

@@ -1,7 +1,6 @@
 package com.red.blog_db.controller;
 
 import com.red.blog_db.entity.CommentEntity;
-import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,9 @@ public class CommentController {
         commentService.deleteComment(myId);
     }
 
-    @PostMapping("/posttitle/{postTitle}/username/{username}")
-    public void createPost(@Valid @RequestBody CommentEntity commentEntity, @PathVariable String userName, @PathVariable String postTitle) {
-        commentService.createComment(postTitle, userName , commentEntity);
+    @PostMapping("/postid/{postId}/username/{myId}")
+    public void createPost(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
+        commentService.createComment(postId, myId, commentEntity);
     }
 
 }

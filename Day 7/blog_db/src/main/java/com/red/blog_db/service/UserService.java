@@ -29,8 +29,8 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public void updateUserByUsername(UserEntity userEntity, String userName) {
-        UserEntity user = userRepository.findByUserName(userName);
+    public void updateUserByUsername(UserEntity userEntity, Long myId) {
+        UserEntity user = userRepository.findByUserId(myId);
         user.setUserName(userEntity.getUserName());
         user.setUserPwd(userEntity.getUserPwd());
         user.setEmailId(userEntity.getEmailId());
@@ -41,8 +41,5 @@ public class UserService {
         userRepository.deleteById(myId);
     }
 
-    public UserEntity getByUsername(String userName) {
-        return userRepository.findByUserName(userName);
-    }
 
 }
