@@ -35,9 +35,9 @@ public class PostController {
         postService.createPost(postEntity, userName);
     }
 
-    @PutMapping("/posttitle/{userName}")
-    public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable String postTitle) {
-        postService.updateUserByPostname(postEntity, postTitle);
+    @PutMapping("/postid/{postid}")
+    public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long postid) {
+        postService.updateUserByPostname(postEntity, postid);
     }
 
 

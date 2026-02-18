@@ -36,8 +36,8 @@ public class PostService {
         postRepository.save(postEntity);
     }
 
-    public void updateUserByPostname(PostEntity postEntity, String postTitle) {
-        PostEntity post = postRepository.findByPostTitle(postTitle);
+    public void updateUserByPostname(PostEntity postEntity, Long  myId) {
+        PostEntity post = postRepository.findByPostId(myId);
         post.setPostTitle(postEntity.getPostTitle());
         post.setPostBody(postEntity.getPostBody());
         post.setPostTime(LocalDateTime.now());
