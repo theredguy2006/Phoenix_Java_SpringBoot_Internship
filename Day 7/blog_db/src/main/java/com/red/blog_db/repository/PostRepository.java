@@ -1,4 +1,9 @@
 package com.red.blog_db.repository;
 
-public interface PostRepository {
+import com.red.blog_db.entity.PostEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PostRepository extends JpaRepository<PostEntity, Long> {
+
+    PostEntity findByPostTitle(String postTitle);
 }
