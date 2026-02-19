@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "comments")
@@ -29,11 +30,13 @@ public class CommentEntity {
 
     @ManyToOne
     @JoinColumn(name = "postId", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "post-comment")
     private PostEntity postEntity;
+
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "user-comment")
     private UserEntity userEntity;
+
 }

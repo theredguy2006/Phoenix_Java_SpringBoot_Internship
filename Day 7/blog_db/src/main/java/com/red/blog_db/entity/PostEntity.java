@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "posts")
@@ -33,8 +34,8 @@ public class PostEntity {
 
 
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<CommentEntity> commentEntityList = new ArrayList<>();
+    @JsonManagedReference(value = "post-comment")
+    private List<CommentEntity> commentEntityList;
 
 
     @ManyToOne

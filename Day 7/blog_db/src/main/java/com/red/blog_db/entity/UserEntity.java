@@ -38,9 +38,9 @@ public class UserEntity {
     @JsonManagedReference
     private List<PostEntity> postEntityList = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<CommentEntity> commentEntityList = new ArrayList<>();
+    @JsonManagedReference(value = "user-comment")
+    private List<CommentEntity> commentEntityList;
+
 }
 

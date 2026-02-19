@@ -25,12 +25,12 @@ public class PostController {
         return postService.getPostById(myId);
     }
 
-    @DeleteMapping("/id/{myId}")
+    @DeleteMapping("/postid/{postId}")
     public void deletePostById(@PathVariable Long myId) {
         postService.deletePost(myId);
     }
 
-    @PostMapping("/id/{myId}")
+    @PostMapping("/userid/{myId}")
     public void createPost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long myId) {
         postService.createPost(postEntity, myId);
     }
