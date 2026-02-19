@@ -1,6 +1,7 @@
 package com.red.blog_db.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -29,14 +30,13 @@ public class CommentEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "postId", nullable = false)
-    @JsonBackReference(value = "post-comment")
+    @JoinColumn(name = "post_id")
+    @JsonIgnoreProperties({"commentEntityList"})
     private PostEntity postEntity;
 
-
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    @JsonBackReference(value = "user-comment")
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"postEntityList", "commentEntityList"})
     private UserEntity userEntity;
 
 }

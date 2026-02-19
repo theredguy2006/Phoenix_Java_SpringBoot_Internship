@@ -1,6 +1,7 @@
 package com.red.blog_db.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -39,7 +40,8 @@ public class PostEntity {
 
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"postEntityList", "commentEntityList"})
     private UserEntity userEntity;
+
 }
