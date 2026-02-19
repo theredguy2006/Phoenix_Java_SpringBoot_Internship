@@ -21,17 +21,17 @@ public class CommentController {
     }
 
     @GetMapping("/id/{myId}")
-    public Optional<CommentEntity> getPostById(@PathVariable Long myId) {
+    public Optional<CommentEntity> getCommentById(@PathVariable Long myId) {
         return commentService.getCommentById(myId);
     }
 
     @DeleteMapping("/id/{myId}")
-    public void deletePostById(@PathVariable Long myId) {
+    public void deleteCommentById(@PathVariable Long myId) {
         commentService.deleteComment(myId);
     }
 
     @PostMapping("/postid/{postId}/userid/{myId}")
-    public void createPost(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
+    public void createComment(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
         commentService.createComment(postId, myId, commentEntity);
     }
 

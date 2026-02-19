@@ -7,6 +7,8 @@ import com.red.blog_db.entity.UserEntity;
 import com.red.blog_db.repository.CommentRepository;
 import com.red.blog_db.repository.PostRepository;
 import com.red.blog_db.repository.UserRepository;
+import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,23 +38,15 @@ public class CommentService {
         return commentRepository.findById(myId);
     }
 
-    public void createComment(Long myId, Long postId, CommentEntity commentEntity) {
+    public void createComment(Long myId, Long postId, @NotNull @NonNull CommentEntity commentEntity) throws RuntimeException {
 
-        try {
-            UserEntity user = userRepository.findByUserId(myId);
-            PostEntity post = postRepository.findByPostId(postId);
+
+            UserEntity user = userRepository.findByUserId(postId);
+            PostEntity post = postRepository.findByPostId(myId);
             commentEntity.setUserEntity(user);
             commentEntity.setPostEntity(post);
             commentRepository.save(commentEntity);
-        } catch (NullPointerException ne) {
-            ne.getStackTrace();
-            throw new NullPointerException();
-        } catch(Exception e)
-        {
-            System.out.print("Unexpected Error Besides NullPointer Exception "+e);
-            e.getStackTrace();
-            System.out.println("Above is the stack Trace ");
-        }
+
     }
 
     public void deleteComment(Long myId) {

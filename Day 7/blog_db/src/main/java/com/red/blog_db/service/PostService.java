@@ -3,6 +3,7 @@ package com.red.blog_db.service;
 import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.entity.UserEntity;
 import com.red.blog_db.repository.PostRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,40 +32,23 @@ public class PostService {
         return postRepository.findById(myId);
     }
 
-    public void createPost(PostEntity postEntity, Long myId) {
-        try {
+    public void createPost(@NotNull  PostEntity postEntity, Long myId) {
             UserEntity user = userService.getUserById(myId);
             postEntity.setUserEntity(user);
             postRepository.save(postEntity);
-        } catch (NullPointerException ne) {
-            ne.getStackTrace();
-            throw new NullPointerException();
-        } catch (Exception e) {
-            System.out.print("Unexpected Error Besides NullPointer Exception " + e);
-            e.getStackTrace();
-            System.out.println("Above is the stack Trace ");
-        }
     }
 
-    public void updatePostById(PostEntity postEntity, Long myId) {
-        try {
-            PostEntity post = postRepository.findByPostId(myId);
+    public void updatePostById( @NotNull  PostEntity postEntity, Long myId) {
+
+           PostEntity post = postRepository.findByPostId(myId);
             post.setPostTitle(postEntity.getPostTitle());
             post.setPostBody(postEntity.getPostBody());
             post.setPostTime(LocalDateTime.now());
             postRepository.save(post);
-        } catch (NullPointerException ne) {
-            ne.getStackTrace();
-            throw new NullPointerException();
-        } catch (Exception e) {
-            System.out.print("Unexpected Error Besides NullPointer Exception " + e);
-            e.getStackTrace();
-            System.out.println("Above is the stack Trace ");
-        }
     }
 
 
-    public void deletePost(Long myId) {
-        postRepository.deleteById(myId);
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
     }
 }
