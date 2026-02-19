@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -33,14 +32,18 @@ public class UserService {
 
     public void updateUserByUsername(@NotNull UserEntity userEntity, Long myId) {
 
-            UserEntity user = userRepository.findByUserId(myId);
-            user.setUserName(userEntity.getUserName());
-            user.setUserPwd(userEntity.getUserPwd());
-            user.setEmailId(userEntity.getEmailId());
-            userRepository.save(user);
+        UserEntity user = userRepository.findByUserId(myId);
+        user.setUserName(userEntity.getUserName());
+        user.setUserPwd(userEntity.getUserPwd());
+        user.setEmailId(userEntity.getEmailId());
+        userRepository.save(user);
     }
 
     public void deleteUser(Long myId) {
+
+        if (!userRepository.existsById(myId)) {
+            throw new RuntimeException("User not found");
+        }
         userRepository.deleteById(myId);
     }
 

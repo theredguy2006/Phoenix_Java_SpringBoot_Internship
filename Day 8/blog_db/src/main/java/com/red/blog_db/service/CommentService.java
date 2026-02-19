@@ -41,15 +41,18 @@ public class CommentService {
     public void createComment(Long myId, Long postId, @NotNull @NonNull CommentEntity commentEntity) throws RuntimeException {
 
 
-            UserEntity user = userRepository.findByUserId(postId);
-            PostEntity post = postRepository.findByPostId(myId);
-            commentEntity.setUserEntity(user);
-            commentEntity.setPostEntity(post);
-            commentRepository.save(commentEntity);
+        UserEntity user = userRepository.findByUserId(postId);
+        PostEntity post = postRepository.findByPostId(myId);
+        commentEntity.setUserEntity(user);
+        commentEntity.setPostEntity(post);
+        commentRepository.save(commentEntity);
 
     }
 
     public void deleteComment(Long myId) {
+        if (!commentRepository.existsById(myId)) {
+            throw new RuntimeException("Comment not found");
+        }
         commentRepository.deleteById(myId);
     }
 

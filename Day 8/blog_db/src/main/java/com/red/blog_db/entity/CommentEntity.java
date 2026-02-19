@@ -18,14 +18,14 @@ public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commentId")
+    @Column(name = "comment_id")
     private Long commentId;
 
     @NotNull
-    @Column(name = "commentBody")
+    @Column(name = "comment_body")
     private String commentBody;
 
-    @Column(name = "commentTime")
+    @Column(name = "comment_time")
     private LocalDateTime commentTime;
 
 
