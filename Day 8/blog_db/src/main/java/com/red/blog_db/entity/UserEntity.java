@@ -2,6 +2,7 @@ package com.red.blog_db.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class UserEntity {
     private String userName;
 
     @NotNull
+    @Email
     @Column(name = "email_id", unique = true)
     private String emailId;
 
