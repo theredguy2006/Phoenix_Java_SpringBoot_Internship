@@ -30,7 +30,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
 
     //    The bottom will ensure that keyword can be anywhere in the title instead of keyword=title,
-    @Query("select p from PostEntity p where p.postTitle like %:keyword%")
+    @Query("select p from PostEntity p where lower(p.postTitle) like lower(concat('%', :keyword, '%'))")
     List<PostEntity> findPostContainingKeywordInTitle(@Param("keyword") String keyword);
 
 //    @Query("select p from PostEntity p sortBy p.postTime")
@@ -41,7 +41,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     //    The Bottom is now the correct version.
     @Query("select p from PostEntity p order by p.postTime desc")
     List<PostEntity> recentPosts();
-
 
 
 }
