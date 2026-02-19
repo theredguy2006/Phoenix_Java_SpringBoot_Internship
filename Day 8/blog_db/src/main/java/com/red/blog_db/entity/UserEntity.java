@@ -19,18 +19,18 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private Long userId;
     @NotNull
-    @Column(name = "userName")
+    @Column(name = "user_name")
     private String userName;
     @NotNull
-    @Column(name = "emailId", unique = true)
+    @Column(name = "email_id", unique = true)
     private String emailId;
     @NotNull
-    @Column(name = "userPwd")
+    @Column(name = "user_pwd")
     private Long userPwd;
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 

@@ -22,15 +22,15 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postId")
+    @Column(name = "post_id")
     private Long postId;
     @NotNull
-    @Column(name = "postTitle")
+    @Column(name = "post_title")
     private String postTitle;
     @NotNull
-    @Column(name = "postBody")
+    @Column(name = "post_body")
     private String postBody;
-    @Column(name = "postTime")
+    @Column(name = "post_time")
     private LocalDateTime postTime;
 
 

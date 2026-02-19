@@ -32,23 +32,40 @@ public class PostService {
         return postRepository.findById(myId);
     }
 
-    public void createPost(@NotNull  PostEntity postEntity, Long myId) {
-            UserEntity user = userService.getUserById(myId);
-            postEntity.setUserEntity(user);
-            postRepository.save(postEntity);
+    public void createPost(@NotNull PostEntity postEntity, Long myId) {
+        UserEntity user = userService.getUserById(myId);
+        postEntity.setPostTime(LocalDateTime.now());
+        postEntity.setUserEntity(user);
+        postRepository.save(postEntity);
     }
 
-    public void updatePostById( @NotNull  PostEntity postEntity, Long myId) {
+    public void updatePostById(@NotNull PostEntity postEntity, Long myId) {
 
-           PostEntity post = postRepository.findByPostId(myId);
-            post.setPostTitle(postEntity.getPostTitle());
-            post.setPostBody(postEntity.getPostBody());
-            post.setPostTime(LocalDateTime.now());
-            postRepository.save(post);
+        PostEntity post = postRepository.findByPostId(myId);
+        post.setPostTitle(postEntity.getPostTitle());
+        post.setPostBody(postEntity.getPostBody());
+        post.setPostTime(LocalDateTime.now());
+        postRepository.save(post);
     }
 
 
     public void deletePost(Long postId) {
+
+        if (!postRepository.existsById(postId)) {
+            throw new RuntimeException("Post not found");
+        }
         postRepository.deleteById(postId);
+    }
+
+    public List<PostEntity> recentPosts() {
+        return postRepository.recentPosts();
+    }
+
+    public List<PostEntity> findKeyword(String keyword) {
+        return postRepository.findPostContainingKeywordInTitle(keyword);
+    }
+
+    public List<PostEntity> findUserPosts(Long myId) {
+        return postRepository.findPostsByUser(myId);
     }
 }

@@ -26,8 +26,8 @@ public class PostController {
     }
 
     @DeleteMapping("/postid/{postId}")
-    public void deletePostById(@PathVariable Long myId) {
-        postService.deletePost(myId);
+    public void deletePostById(@PathVariable Long postId) {
+        postService.deletePost(postId);
     }
 
     @PostMapping("/userid/{myId}")
@@ -35,9 +35,24 @@ public class PostController {
         postService.createPost(postEntity, myId);
     }
 
-    @PutMapping("/postid/{postid}")
-    public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long postid) {
-        postService.updatePostById(postEntity, postid);
+    @PutMapping("/postid/{postId}")
+    public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long postId) {
+        postService.updatePostById(postEntity, postId);
+    }
+
+    @GetMapping("/recent")
+    public List<PostEntity> recentPosts() {
+        return postService.recentPosts();
+    }
+
+    @GetMapping("/search/{keyword}")
+    public List<PostEntity> findKeyword(@PathVariable String keyword) {
+        return postService.findKeyword(keyword);
+    }
+
+    @GetMapping("/byuser/{myId}")
+    public List<PostEntity> findUserPosts(@PathVariable Long myId) {
+        return postService.findUserPosts(myId);
     }
 
 
