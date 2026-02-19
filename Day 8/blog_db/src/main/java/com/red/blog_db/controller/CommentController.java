@@ -32,7 +32,12 @@ public class CommentController {
 
     @PostMapping("/postid/{postId}/userid/{myId}")
     public void createComment(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
-        commentService.createComment(postId, myId, commentEntity);
+        commentService.createComment(myId, postId, commentEntity);
+    }
+
+    @GetMapping("/usercomment/{userId}")
+    public List<CommentEntity> userComment(@PathVariable Long userId) {
+        return commentService.userComment(userId);
     }
 
 }

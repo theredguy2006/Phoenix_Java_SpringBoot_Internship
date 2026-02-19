@@ -28,15 +28,15 @@ public class CommentEntity {
     @Column(name = "comment_time")
     private LocalDateTime commentTime;
 
-
+    // 🔹 COMMENT → POST (BACK SIDE OF post-comment)
     @ManyToOne
     @JoinColumn(name = "post_id")
-    @JsonIgnoreProperties({"commentEntityList"})
+    @JsonBackReference(value = "post-comment")
     private PostEntity postEntity;
 
+    // 🔹 COMMENT → USER (BACK SIDE OF user-comment)
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"postEntityList", "commentEntityList"})
+    @JsonBackReference(value = "user-comment")
     private UserEntity userEntity;
-
 }

@@ -19,29 +19,30 @@ import java.util.Optional;
 @Setter
 public class PostEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long postId;
+
     @NotNull
     @Column(name = "post_title")
     private String postTitle;
+
     @NotNull
     @Column(name = "post_body")
     private String postBody;
+
     @Column(name = "post_time")
     private LocalDateTime postTime;
 
-
+    // 🔹 POST → COMMENTS
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "post-comment")
-    private List<CommentEntity> commentEntityList;
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
 
-
+    // 🔹 POST → USER (BACK SIDE OF user-post)
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"postEntityList", "commentEntityList"})
+    @JsonBackReference(value = "user-post")
     private UserEntity userEntity;
-
 }
