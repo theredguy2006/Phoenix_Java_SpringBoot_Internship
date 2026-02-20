@@ -5,11 +5,11 @@ import com.red.blog_db.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -17,8 +17,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserEntity> getAllUsers() {
-        return new ArrayList<>(userRepository.findAll());
+    public Page<UserEntity> getAllUsers(Pageable page) {
+
+        return userRepository.findAll(page);
     }
 
     public UserEntity getUserById(Long myId) {
