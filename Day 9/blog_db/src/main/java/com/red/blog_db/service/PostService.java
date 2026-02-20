@@ -6,6 +6,8 @@ import com.red.blog_db.repository.PostRepository;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -68,5 +70,10 @@ public class PostService {
 
     public List<PostEntity> findUserPosts(Long myId) {
         return postRepository.findPostsByUser(myId);
+    }
+
+
+    public Page<PostEntity> findByPagination(Pageable page) {
+        return postRepository.findAll(page);
     }
 }
