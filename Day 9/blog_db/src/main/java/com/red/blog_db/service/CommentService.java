@@ -10,10 +10,11 @@ import com.red.blog_db.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +30,9 @@ public class CommentService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<CommentEntity> getAllComments() {
+    public Page<CommentEntity> getAllComments(Pageable page) {
 
-        return new ArrayList<>(commentRepository.findAll());
+        return commentRepository.findAll(page);
     }
 
     public Optional<CommentEntity> getCommentById(Long myId) {
@@ -42,8 +43,8 @@ public class CommentService {
     public void createComment(Long myId, Long postId, @NotNull @NonNull CommentEntity commentEntity) throws RuntimeException {
 
 
-        UserEntity user = userRepository.findByUserId(myId);
-        PostEntity post = postRepository.findByPostId(postId);
+        UserEntity user = userRepository.findById(myId).orElseThrow(() -> new RuntimeException("User not found"));
+        PostEntity post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         commentEntity.setUserEntity(user);
         commentEntity.setPostEntity(post);
         commentEntity.setCommentTime(LocalDateTime.now());

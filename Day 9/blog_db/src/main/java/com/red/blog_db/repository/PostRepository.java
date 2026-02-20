@@ -1,7 +1,6 @@
 package com.red.blog_db.repository;
 
 import com.red.blog_db.entity.PostEntity;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,8 +45,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> recentPosts();
 
 
-
-    Page<PostEntity> findAll(@NonNull Pageable page);
+    Page<PostEntity> findAllByOrderByPostTitle(Pageable pageable);
 
 
 }

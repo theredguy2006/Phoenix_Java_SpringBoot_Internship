@@ -1,6 +1,8 @@
 package com.red.blog_db.repository;
 
 import com.red.blog_db.entity.CommentEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +22,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 //   2.)The param should match. i did UserId in query but param is UserID. so
 //   future self focus on naming. It is half of my problems right now.
 
-//    the bottom one is the correct modified version of this query.
-@Query("select c from CommentEntity c where c.userEntity.userId = :theUserId")
-List<CommentEntity> findCommentByUser(@Param("theUserId") Long theUserId);
-
+    //    the bottom one is the correct modified version of this query.
+    @Query("select c from CommentEntity c where c.userEntity.userId = :theUserId")
+    List<CommentEntity> findCommentByUser(@Param("theUserId") Long theUserId);
+    
+    Page<CommentEntity> findAll(Pageable pageable);
 }

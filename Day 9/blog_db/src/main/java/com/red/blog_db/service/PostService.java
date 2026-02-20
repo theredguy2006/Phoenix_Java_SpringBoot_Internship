@@ -76,4 +76,8 @@ public class PostService {
     public Page<PostEntity> findByPagination(Pageable page) {
         return postRepository.findAll(page);
     }
+
+    public Page<PostEntity> sortByTitle(Pageable page) {
+        return postRepository.findAllByOrderByPostTitle(page);
+    }
 }
