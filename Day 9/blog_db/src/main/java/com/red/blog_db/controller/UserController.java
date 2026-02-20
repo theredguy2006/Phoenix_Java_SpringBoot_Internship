@@ -4,10 +4,10 @@ import com.red.blog_db.entity.UserEntity;
 import com.red.blog_db.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -17,8 +17,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserEntity> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserEntity> getAllUsers(@PageableDefault(sort = "userName", page = 0, size = 5) Pageable page) {
+        return userService.getAllUsers(page);
     }
 
     @PostMapping
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/id/{myId}")
-    public void updateUser(@Valid @PathVariable Long myId, @RequestBody UserEntity userEntity) {
+    public void updateUser(@PathVariable Long myId, @Valid @RequestBody UserEntity userEntity) {
         userService.updateUserByUsername(userEntity, myId);
     }
 }
