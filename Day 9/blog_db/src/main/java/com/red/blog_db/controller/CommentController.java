@@ -4,6 +4,10 @@ import com.red.blog_db.entity.CommentEntity;
 import com.red.blog_db.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +20,15 @@ public class CommentController {
     private CommentService commentService;
 
     @GetMapping
-    public List<CommentEntity> getAllComments() {
-        return commentService.getAllComments();
+    public Page<CommentEntity> getAllComments(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, @RequestParam(required = false, defaultValue = "ASC") String direction, @RequestParam(required = false, defaultValue = "commentId") String sortBy) {
+        Sort sort = null;
+        if (direction.equalsIgnoreCase("asc")) {
+            sort = Sort.by(sortBy).ascending();
+        } else {
+            sort = Sort.by(sortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return commentService.getAllComments(pageable);
     }
 
     @GetMapping("/id/{myId}")

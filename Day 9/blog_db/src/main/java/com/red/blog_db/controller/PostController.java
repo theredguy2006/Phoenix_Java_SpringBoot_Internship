@@ -4,12 +4,12 @@ import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +22,11 @@ public class PostController {
     @GetMapping
     public Page<PostEntity> getAllPosts(@PageableDefault(size = 5, page = 0) Pageable page) {
         return postService.findByPagination(page);
+    }
+
+    @GetMapping("/bytitle")
+    public Page<PostEntity> getByTitles(@PageableDefault(direction = Sort.Direction.ASC) Pageable pageable) {
+        return postService.sortByTitle(pageable);
     }
 
     @GetMapping("/id/{myId}")
@@ -58,6 +63,4 @@ public class PostController {
     public List<PostEntity> findUserPosts(@PathVariable Long myId) {
         return postService.findUserPosts(myId);
     }
-
-
 }
