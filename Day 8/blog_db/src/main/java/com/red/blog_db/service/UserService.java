@@ -30,7 +30,7 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public void updateUserByUsername(@NotNull UserEntity userEntity, Long myId) {
+    public void updateUserByUsername(@NotNull @NonNull UserEntity userEntity, Long myId) {
 
         UserEntity user = userRepository.findByUserId(myId);
         user.setUserName(userEntity.getUserName());

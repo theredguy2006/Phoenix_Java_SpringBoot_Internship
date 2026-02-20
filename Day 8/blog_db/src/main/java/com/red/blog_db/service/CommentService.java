@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class CommentService {
         PostEntity post = postRepository.findByPostId(postId);
         commentEntity.setUserEntity(user);
         commentEntity.setPostEntity(post);
+        commentEntity.setCommentTime(LocalDateTime.now());
         commentRepository.save(commentEntity);
 
     }
@@ -56,8 +58,7 @@ public class CommentService {
         commentRepository.deleteById(myId);
     }
 
-    public List<CommentEntity> userComment(Long userId)
-    {
+    public List<CommentEntity> userComment(Long userId) {
         return commentRepository.findCommentByUser(userId);
     }
 

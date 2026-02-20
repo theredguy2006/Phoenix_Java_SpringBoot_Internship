@@ -4,6 +4,7 @@ import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.entity.UserEntity;
 import com.red.blog_db.repository.PostRepository;
 import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,14 @@ public class PostService {
         return postRepository.findById(myId);
     }
 
-    public void createPost(@NotNull PostEntity postEntity, Long myId) {
+    public void createPost(@NotNull @NonNull PostEntity postEntity, Long myId) {
         UserEntity user = userService.getUserById(myId);
         postEntity.setPostTime(LocalDateTime.now());
         postEntity.setUserEntity(user);
         postRepository.save(postEntity);
     }
 
-    public void updatePostById(@NotNull PostEntity postEntity, Long myId) {
+    public void updatePostById(@NotNull @NonNull PostEntity postEntity, Long myId) {
 
         PostEntity post = postRepository.findByPostId(myId);
         post.setPostTitle(postEntity.getPostTitle());
