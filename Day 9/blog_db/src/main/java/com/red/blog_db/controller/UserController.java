@@ -1,12 +1,16 @@
 package com.red.blog_db.controller;
 
-import com.red.blog_db.entity.UserEntity;
+import com.red.blog_db.dto.CreateUserRequestDTO;
+import com.red.blog_db.dto.UpdateUserRequestDTO;
+import com.red.blog_db.dto.UserResponseDTO;
 import com.red.blog_db.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,18 +21,18 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public Page<UserEntity> getAllUsers(@PageableDefault(sort = "userName", page = 0, size = 5) Pageable page) {
+    public Page<UserResponseDTO> getAllUsers(@PageableDefault(sort = "userName", size = 5) Pageable page) {
         return userService.getAllUsers(page);
     }
 
     @PostMapping
-    public void saveUser(@Valid @RequestBody UserEntity userEntity) {
-        userService.createUser(userEntity);
-
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO request) {
+        UserResponseDTO response = userService.createUser(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/id/{myId}")
-    public UserEntity getUserById(@PathVariable Long myId) {
+    public UserResponseDTO getUserById(@PathVariable Long myId) {
         return userService.getUserById(myId);
     }
 
@@ -38,7 +42,9 @@ public class UserController {
     }
 
     @PutMapping("/id/{myId}")
-    public void updateUser(@PathVariable Long myId, @Valid @RequestBody UserEntity userEntity) {
-        userService.updateUserByUsername(userEntity, myId);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long myId, @Valid @RequestBody UpdateUserRequestDTO request) {
+
+        UserResponseDTO response = userService.updateUser(myId, request);
+        return ResponseEntity.ok(response);
     }
 }

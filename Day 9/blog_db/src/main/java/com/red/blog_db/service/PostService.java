@@ -1,8 +1,12 @@
 package com.red.blog_db.service;
 
+import com.red.blog_db.dto.CreatePostDto;
+import com.red.blog_db.dto.PostResponseDto;
 import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.entity.UserEntity;
+import com.red.blog_db.mapper.PostMapper;
 import com.red.blog_db.repository.PostRepository;
+import com.red.blog_db.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -21,63 +23,84 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    private UserService userService;
+    private PostMapper postMapper;
 
-
-    public List<PostEntity> getAllPosts() {
-
-        return new ArrayList<>(postRepository.findAll());
+    // 🔹 GET ALL POSTS (PAGINATION)
+    public Page<PostResponseDto> findByPagination(Pageable page) {
+        return postRepository.findAll(page).map(postMapper::toDTO);
     }
 
-    public Optional<PostEntity> getPostById(Long myId) {
-        return postRepository.findById(myId);
+    // 🔹 SORT POSTS BY TITLE
+    public Page<PostResponseDto> sortByTitle(Pageable page) {
+        return postRepository.findAllByOrderByPostTitle(page).map(postMapper::toDTO);
     }
 
-    public void createPost(@NotNull @NonNull PostEntity postEntity, Long myId) {
-        UserEntity user = userService.getUserById(myId);
-        postEntity.setPostTime(LocalDateTime.now());
-        postEntity.setUserEntity(user);
-        postRepository.save(postEntity);
+    // 🔹 GET POST BY ID
+    public PostResponseDto getPostById(Long myId) {
+        PostEntity post = postRepository.findById(myId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        return postMapper.toDTO(post);
     }
 
-    public void updatePostById(@NotNull @NonNull PostEntity postEntity, Long myId) {
+    // 🔹 CREATE POST
+    public PostResponseDto createPost(CreatePostDto request) {
+
+        // Fetch USER ENTITY directly from repository
+        UserEntity user = userRepository.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+
+        PostEntity post = new PostEntity();
+        post.setPostTitle(request.getPostTitle());
+        post.setPostBody(request.getPostBody());
+        post.setPostTime(LocalDateTime.now());
+        post.setUserEntity(user);   // ✅ Correct type
+
+        PostEntity saved = postRepository.save(post);
+
+        return postMapper.toDTO(saved);
+    }
+
+    // 🔹 UPDATE POST
+    public PostResponseDto updatePostById(@NotNull @NonNull CreatePostDto request, Long myId) {
 
         PostEntity post = postRepository.findByPostId(myId);
-        post.setPostTitle(postEntity.getPostTitle());
-        post.setPostBody(postEntity.getPostBody());
+
+        if (post == null) {
+            throw new RuntimeException("Post not found");
+        }
+
+        post.setPostTitle(request.getPostTitle());
+        post.setPostBody(request.getPostBody());
         post.setPostTime(LocalDateTime.now());
-        postRepository.save(post);
+
+        PostEntity updated = postRepository.save(post);
+
+        return postMapper.toDTO(updated);
     }
 
-
+    // 🔹 DELETE POST
     public void deletePost(Long postId) {
-
         if (!postRepository.existsById(postId)) {
             throw new RuntimeException("Post not found");
         }
         postRepository.deleteById(postId);
     }
 
-    public List<PostEntity> recentPosts() {
-        return postRepository.recentPosts();
+    // 🔹 RECENT POSTS
+    public List<PostResponseDto> recentPosts() {
+        return postRepository.recentPosts().stream().map(postMapper::toDTO).toList();
     }
 
-    public List<PostEntity> findKeyword(String keyword) {
-        return postRepository.findPostContainingKeywordInTitle(keyword);
+    // 🔹 SEARCH POSTS BY KEYWORD
+    public List<PostResponseDto> findKeyword(String keyword) {
+        return postRepository.findPostContainingKeywordInTitle(keyword).stream().map(postMapper::toDTO).toList();
     }
 
-    public List<PostEntity> findUserPosts(Long myId) {
-        return postRepository.findPostsByUser(myId);
-    }
-
-
-    public Page<PostEntity> findByPagination(Pageable page) {
-        return postRepository.findAll(page);
-    }
-
-    public Page<PostEntity> sortByTitle(Pageable page) {
-        return postRepository.findAllByOrderByPostTitle(page);
+    // 🔹 FIND POSTS BY USER
+    public List<PostResponseDto> findUserPosts(Long myId) {
+        return postRepository.findPostsByUser(myId).stream().map(postMapper::toDTO).toList();
     }
 }
