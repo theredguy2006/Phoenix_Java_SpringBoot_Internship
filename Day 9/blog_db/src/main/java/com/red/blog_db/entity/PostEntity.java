@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,11 +26,15 @@ public class PostEntity {
     @Column(name = "post_id")
     private Long postId;
 
-    @NotNull
+//    @NotNull
+//    @NotBlank
+//    @Size(min = 20, max = 70)
     @Column(name = "post_title")
     private String postTitle;
 
-    @NotNull
+//    @NotNull
+//    @NotBlank
+//    @Size(min = 20, max = 200)
     @Column(name = "post_body")
     private String postBody;
 
@@ -37,12 +43,12 @@ public class PostEntity {
 
     // 🔹 POST → COMMENTS
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "post-comment")
+//    @JsonManagedReference(value = "post-comment")
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     // 🔹 POST → USER (BACK SIDE OF user-post)
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference(value = "user-post")
+//    @JsonBackReference(value = "user-post")
     private UserEntity userEntity;
 }

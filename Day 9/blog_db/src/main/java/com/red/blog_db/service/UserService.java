@@ -1,9 +1,11 @@
 package com.red.blog_db.service;
 
+import com.red.blog_db.dto.CreateUserRequestDTO;
+import com.red.blog_db.dto.UpdateUserRequestDTO;
+import com.red.blog_db.dto.UserResponseDTO;
 import com.red.blog_db.entity.UserEntity;
+import com.red.blog_db.mapper.UserMapper;
 import com.red.blog_db.repository.UserRepository;
-import jakarta.validation.constraints.NotNull;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,27 +19,48 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Page<UserEntity> getAllUsers(Pageable page) {
+    @Autowired
+    private UserMapper userMapper;
 
-        return userRepository.findAll(page);
+    public Page<UserResponseDTO> getAllUsers(Pageable page) {
+
+        Page<UserEntity> users = userRepository.findAll(page);
+
+        return users.map(userMapper::toDTO);
     }
 
-    public UserEntity getUserById(Long myId) {
-        return userRepository.findByUserId(myId);
-    }
-
-    public void createUser(@NonNull UserEntity userEntity) {
-        userEntity.setCreatedAt(LocalDateTime.now());
-        userRepository.save(userEntity);
-    }
-
-    public void updateUserByUsername(@NotNull @NonNull UserEntity userEntity, Long myId) {
+    public UserResponseDTO getUserById(Long myId) {
 
         UserEntity user = userRepository.findByUserId(myId);
-        user.setUserName(userEntity.getUserName());
-        user.setUserPwd(userEntity.getUserPwd());
-        user.setEmailId(userEntity.getEmailId());
-        userRepository.save(user);
+
+        if (user == null) {
+            throw new RuntimeException("User Not found ");
+        }
+        return userMapper.toDTO(user);
+    }
+
+    public UserResponseDTO createUser(CreateUserRequestDTO request) {
+
+        UserEntity user = userMapper.toEntity(request);
+        user.setCreatedAt(LocalDateTime.now());
+
+        UserEntity saved = userRepository.save(user);
+
+        return userMapper.toDTO(saved);
+    }
+
+    public UserResponseDTO updateUser(Long myId, UpdateUserRequestDTO request) {
+        UserEntity user = userRepository.findByUserId(myId);
+
+        if (user == null) {
+            throw new RuntimeException("User Not found");
+        }
+
+        userMapper.updateEntity(user, request);
+
+        UserEntity saved = userRepository.save(user);
+
+        return userMapper.toDTO(saved);
     }
 
     public void deleteUser(Long myId) {

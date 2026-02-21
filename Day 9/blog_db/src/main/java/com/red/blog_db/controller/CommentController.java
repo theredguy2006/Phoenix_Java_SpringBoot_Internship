@@ -1,5 +1,6 @@
 package com.red.blog_db.controller;
 
+import com.red.blog_db.dto.CommentResponseDto;
 import com.red.blog_db.entity.CommentEntity;
 import com.red.blog_db.service.CommentService;
 import jakarta.validation.Valid;
@@ -16,23 +17,30 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
+
     @Autowired
     private CommentService commentService;
 
     @GetMapping
-    public Page<CommentEntity> getAllComments(@RequestParam(required = false, defaultValue = "0") int page, @RequestParam(required = false, defaultValue = "5") int size, @RequestParam(required = false, defaultValue = "ASC") String direction, @RequestParam(required = false, defaultValue = "commentId") String sortBy) {
-        Sort sort = null;
+    public Page<CommentResponseDto> getAllComments(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "5") int size,
+            @RequestParam(required = false, defaultValue = "ASC") String direction,
+            @RequestParam(required = false, defaultValue = "commentId") String sortBy) {
+
+        Sort sort;
         if (direction.equalsIgnoreCase("asc")) {
             sort = Sort.by(sortBy).ascending();
         } else {
             sort = Sort.by(sortBy).descending();
         }
+
         Pageable pageable = PageRequest.of(page, size, sort);
         return commentService.getAllComments(pageable);
     }
 
     @GetMapping("/id/{myId}")
-    public Optional<CommentEntity> getCommentById(@PathVariable Long myId) {
+    public Optional<CommentResponseDto> getCommentById(@PathVariable Long myId) {
         return commentService.getCommentById(myId);
     }
 
@@ -42,13 +50,14 @@ public class CommentController {
     }
 
     @PostMapping("/postid/{postId}/userid/{myId}")
-    public void createComment(@Valid @RequestBody CommentEntity commentEntity, @PathVariable Long myId, @PathVariable Long postId) {
+    public void createComment(@Valid @RequestBody CommentEntity commentEntity,
+                              @PathVariable Long myId,
+                              @PathVariable Long postId) {
         commentService.createComment(myId, postId, commentEntity);
     }
 
     @GetMapping("/usercomment/{userId}")
-    public List<CommentEntity> userComment(@PathVariable Long userId) {
+    public List<CommentResponseDto> userComment(@PathVariable Long userId) {
         return commentService.userComment(userId);
     }
-
 }

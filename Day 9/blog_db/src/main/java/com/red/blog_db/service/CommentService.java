@@ -1,9 +1,10 @@
 package com.red.blog_db.service;
 
-
+import com.red.blog_db.dto.CommentResponseDto;
 import com.red.blog_db.entity.CommentEntity;
 import com.red.blog_db.entity.PostEntity;
 import com.red.blog_db.entity.UserEntity;
+import com.red.blog_db.mapper.CommentMapper;
 import com.red.blog_db.repository.CommentRepository;
 import com.red.blog_db.repository.PostRepository;
 import com.red.blog_db.repository.UserRepository;
@@ -30,28 +31,41 @@ public class CommentService {
     @Autowired
     private UserRepository userRepository;
 
-    public Page<CommentEntity> getAllComments(Pageable page) {
+    @Autowired
+    private CommentMapper commentMapper;
 
-        return commentRepository.findAll(page);
+    // ONLY return type changed
+    public Page<CommentResponseDto> getAllComments(Pageable page) {
+        return commentRepository.findAll(page)
+                .map(commentMapper::toDTO);
     }
 
-    public Optional<CommentEntity> getCommentById(Long myId) {
-
-        return commentRepository.findById(myId);
+    // ONLY return type changed
+    public Optional<CommentResponseDto> getCommentById(Long myId) {
+        return commentRepository.findById(myId)
+                .map(commentMapper::toDTO);
     }
 
-    public void createComment(Long myId, Long postId, @NotNull @NonNull CommentEntity commentEntity) throws RuntimeException {
+    // LOGIC UNCHANGED
+    public void createComment(Long myId,
+                              Long postId,
+                              @NotNull @NonNull CommentEntity commentEntity)
+            throws RuntimeException {
 
+        UserEntity user = userRepository.findById(myId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserEntity user = userRepository.findById(myId).orElseThrow(() -> new RuntimeException("User not found"));
-        PostEntity post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
         commentEntity.setUserEntity(user);
         commentEntity.setPostEntity(post);
         commentEntity.setCommentTime(LocalDateTime.now());
-        commentRepository.save(commentEntity);
 
+        commentRepository.save(commentEntity);
     }
 
+    // UNCHANGED
     public void deleteComment(Long myId) {
         if (!commentRepository.existsById(myId)) {
             throw new RuntimeException("Comment not found");
@@ -59,8 +73,11 @@ public class CommentService {
         commentRepository.deleteById(myId);
     }
 
-    public List<CommentEntity> userComment(Long userId) {
-        return commentRepository.findCommentByUser(userId);
+    // ONLY return type changed
+    public List<CommentResponseDto> userComment(Long userId) {
+        return commentRepository.findCommentByUser(userId)
+                .stream()
+                .map(commentMapper::toDTO)
+                .toList();
     }
-
 }

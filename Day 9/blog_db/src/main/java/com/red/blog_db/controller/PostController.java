@@ -1,6 +1,7 @@
 package com.red.blog_db.controller;
 
-import com.red.blog_db.entity.PostEntity;
+import com.red.blog_db.dto.CreatePostDto;
+import com.red.blog_db.dto.PostResponseDto;
 import com.red.blog_db.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,56 +12,70 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
+
     @Autowired
     private PostService postService;
 
+    // 🔹 GET ALL POSTS (PAGINATION)
     @GetMapping
-    public Page<PostEntity> getAllPosts(@PageableDefault(size = 5, page = 0) Pageable page) {
+    public Page<PostResponseDto> getAllPosts(
+            @PageableDefault(size = 5, page = 0) Pageable page) {
         return postService.findByPagination(page);
     }
 
+    // 🔹 SORT POSTS BY TITLE
     @GetMapping("/bytitle")
-    public Page<PostEntity> getByTitles(@PageableDefault(direction = Sort.Direction.ASC) Pageable pageable) {
+    public Page<PostResponseDto> getByTitles(
+            @PageableDefault(direction = Sort.Direction.ASC) Pageable pageable) {
         return postService.sortByTitle(pageable);
     }
 
+    // 🔹 GET POST BY ID
     @GetMapping("/id/{myId}")
-    public Optional<PostEntity> getPostById(@PathVariable Long myId) {
+    public PostResponseDto getPostById(@PathVariable Long myId) {
         return postService.getPostById(myId);
     }
 
+    // 🔹 CREATE POST
+    @PostMapping
+    public PostResponseDto createPost(
+            @Valid @RequestBody CreatePostDto request) {
+        return postService.createPost(request);
+    }
+
+    // 🔹 UPDATE POST
+    @PutMapping("/postid/{postId}")
+    public PostResponseDto updatePost(
+            @Valid @RequestBody CreatePostDto request,
+            @PathVariable Long postId) {
+        return postService.updatePostById(request, postId);
+    }
+
+    // 🔹 DELETE POST
     @DeleteMapping("/postid/{postId}")
     public void deletePostById(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
 
-    @PostMapping("/userid/{myId}")
-    public void createPost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long myId) {
-        postService.createPost(postEntity, myId);
-    }
-
-    @PutMapping("/postid/{postId}")
-    public void updatePost(@Valid @RequestBody PostEntity postEntity, @PathVariable Long postId) {
-        postService.updatePostById(postEntity, postId);
-    }
-
+    // 🔹 RECENT POSTS
     @GetMapping("/recent")
-    public List<PostEntity> recentPosts() {
+    public List<PostResponseDto> recentPosts() {
         return postService.recentPosts();
     }
 
+    // 🔹 SEARCH POSTS
     @GetMapping("/search/{keyword}")
-    public List<PostEntity> findKeyword(@PathVariable String keyword) {
+    public List<PostResponseDto> findKeyword(@PathVariable String keyword) {
         return postService.findKeyword(keyword);
     }
 
+    // 🔹 POSTS BY USER
     @GetMapping("/byuser/{myId}")
-    public List<PostEntity> findUserPosts(@PathVariable Long myId) {
+    public List<PostResponseDto> findUserPosts(@PathVariable Long myId) {
         return postService.findUserPosts(myId);
     }
 }
