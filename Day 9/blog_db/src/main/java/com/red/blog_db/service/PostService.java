@@ -71,6 +71,9 @@ public class PostService {
         if (post == null) {
             throw new RuntimeException("Post not found");
         }
+        if (!post.getUserEntity().getUserId().equals(request.getUserId())) {
+            throw new RuntimeException("Not allowed");
+        }
 
         post.setPostTitle(request.getPostTitle());
         post.setPostBody(request.getPostBody());
