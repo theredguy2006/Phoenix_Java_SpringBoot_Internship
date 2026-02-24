@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/user")
+@RestController
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -27,13 +27,14 @@ public class UserController {
         return userService.userCreationDto(userEntity);
     }
 
-    @GetMapping
-    public UserRequestDto getAllUserById(@RequestParam Long userId) {
+    //    I made a mistake of having same endpoint or api point with getAllUser and getUserById
+    @GetMapping("/byid")
+    public UserRequestDto getUserById(@RequestParam Long userId) {
         return userService.getUserById(userId);
     }
 
     @PutMapping
-    public UserRequestDto updateUserById(@RequestParam Long userId, @RequestBody UserEntity userEntity) {
+    public UserRequestDto updateUserById(@RequestParam Long userId, @Valid @RequestBody UserEntity userEntity) {
         return userService.updateUser(userId, userEntity);
     }
 
