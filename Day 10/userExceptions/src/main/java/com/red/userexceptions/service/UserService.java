@@ -3,6 +3,8 @@ package com.red.userexceptions.service;
 import com.red.userexceptions.dto.UserCreationDto;
 import com.red.userexceptions.dto.UserRequestDto;
 import com.red.userexceptions.entity.UserEntity;
+import com.red.userexceptions.exception.DuplicateResourceException;
+import com.red.userexceptions.exception.ResourceNotFoundException;
 import com.red.userexceptions.mapper.UserMapper;
 import com.red.userexceptions.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,14 @@ public class UserService {
     UserMapper userMapper;
 
     public UserCreationDto userCreationDto(UserEntity userEntity) {
-        userRepository.save(userEntity);
+
+        if (userRepository.existsByEmailId(userEntity.getEmailId())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+
         userEntity.setCreatedAt(LocalDateTime.now());
+        userRepository.save(userEntity);
+
         return userMapper.creationDto(userEntity);
     }
 
@@ -32,21 +40,32 @@ public class UserService {
     }
 
     public UserRequestDto deleteUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("User not found");
-        }
         UserEntity user = userRepository.findByUserId(userId);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
         userRepository.delete(user);
         return userMapper.requestDto(user);
     }
 
     public UserRequestDto updateUser(Long userId, UserEntity userEntity) {
-        if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("User not found");
-        }
+
         UserEntity user = userRepository.findByUserId(userId);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
         if (userEntity.getUserName() != null) {
             user.setUserName(userEntity.getUserName());
+        }
+
+        // Check duplicate ONLY if email is being changed
+        if (userEntity.getEmailId() != null && !userEntity.getEmailId().equals(user.getEmailId()) && userRepository.existsByEmailId(userEntity.getEmailId())) {
+
+            throw new DuplicateResourceException("Email already exists");
         }
 
         if (userEntity.getEmailId() != null) {
@@ -56,11 +75,19 @@ public class UserService {
         if (userEntity.getUserPwd() != null) {
             user.setUserPwd(userEntity.getUserPwd());
         }
+
         userRepository.save(user);
         return userMapper.requestDto(user);
     }
 
     public UserRequestDto getUserById(Long userId) {
-        return userMapper.requestDto(userRepository.findByUserId(userId));
+
+        UserEntity user = userRepository.findByUserId(userId);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
+        }
+
+        return userMapper.requestDto(user);
     }
 }
