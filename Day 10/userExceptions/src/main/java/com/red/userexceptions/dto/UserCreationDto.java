@@ -18,5 +18,4 @@ public class UserCreationDto {
 
     @NotBlank(message = "Password cannot be empty")
     private String userPwd;
-    private LocalDateTime createdAt;
 }

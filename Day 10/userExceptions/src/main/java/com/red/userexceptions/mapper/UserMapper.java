@@ -3,30 +3,43 @@ package com.red.userexceptions.mapper;
 import com.red.userexceptions.dto.UserCreationDto;
 import com.red.userexceptions.dto.UserRequestDto;
 import com.red.userexceptions.entity.UserEntity;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class UserMapper {
-    public UserCreationDto creationDto(UserEntity user) {
-        if (user == null) return null;
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-        UserCreationDto dto = new UserCreationDto();
-        dto.setUserName(user.getUserName());
-        dto.setEmailId(user.getEmailId());
-        dto.setCreatedAt(user.getCreatedAt());
+    UserCreationDto toCreationDto(UserEntity user);
 
-        return dto;
+    UserRequestDto toRequestDto(UserEntity user);
 
-    }
-
-    public UserRequestDto requestDto(UserEntity user) {
-        if (user == null) return null;
-
-        UserRequestDto dto = new UserRequestDto();
-        dto.setUserId(user.getUserId());
-        dto.setUserName(user.getUserName());
-        dto.setEmailId(user.getEmailId());
-        return dto;
-    }
-
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    UserEntity toEntity(UserCreationDto dto);
 }
+
+
+//public class UserMapper {
+//    public UserCreationDto creationDto(UserEntity user) {
+//        if (user == null) return null;
+//
+//        UserCreationDto dto = new UserCreationDto();
+//        dto.setUserName(user.getUserName());
+//        dto.setEmailId(user.getEmailId());
+//        dto.setCreatedAt(user.getCreatedAt());
+//
+//        return dto;
+//
+//    }
+//
+//    public UserRequestDto requestDto(UserEntity user) {
+//        if (user == null) return null;
+//
+//        UserRequestDto dto = new UserRequestDto();
+//        dto.setUserId(user.getUserId());
+//        dto.setUserName(user.getUserName());
+//        dto.setEmailId(user.getEmailId());
+//        return dto;
+//    }
+//
+//}
