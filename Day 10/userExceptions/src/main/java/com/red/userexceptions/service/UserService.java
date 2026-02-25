@@ -22,8 +22,10 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
 
-    public UserCreationDto userCreationDto(UserEntity userEntity) {
+    //    public UserCreationDto userCreationDto(UserEntity userEntity) {
+    public UserCreationDto userCreationDto(UserCreationDto userCreationDto) {
 
+        UserEntity userEntity = userMapper.toEntity(userCreationDto);
         if (userRepository.existsByEmailId(userEntity.getEmailId())) {
             throw new DuplicateResourceException("Email already exists");
         }
@@ -31,12 +33,12 @@ public class UserService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userRepository.save(userEntity);
 
-        return userMapper.creationDto(userEntity);
+        return userMapper.toCreationDto(userEntity);
     }
 
     public Page<UserRequestDto> getAllUsers(Pageable page) {
         Page<UserEntity> users = userRepository.findAll(page);
-        return users.map(userMapper::requestDto);
+        return users.map(userMapper::toRequestDto);
     }
 
     public UserRequestDto deleteUser(Long userId) {
@@ -47,11 +49,12 @@ public class UserService {
         }
 
         userRepository.delete(user);
-        return userMapper.requestDto(user);
+        return userMapper.toRequestDto(user);
     }
 
-    public UserRequestDto updateUser(Long userId, UserEntity userEntity) {
+    public UserRequestDto updateUser(Long userId, UserCreationDto userCreationDto) {
 
+        UserEntity userEntity = userMapper.toEntity(userCreationDto);
         UserEntity user = userRepository.findByUserId(userId);
 
         if (user == null) {
@@ -77,7 +80,7 @@ public class UserService {
         }
 
         userRepository.save(user);
-        return userMapper.requestDto(user);
+        return userMapper.toRequestDto(user);
     }
 
     public UserRequestDto getUserById(Long userId) {
@@ -88,6 +91,6 @@ public class UserService {
             throw new ResourceNotFoundException("User not found with id: " + userId);
         }
 
-        return userMapper.requestDto(user);
+        return userMapper.toRequestDto(user);
     }
 }

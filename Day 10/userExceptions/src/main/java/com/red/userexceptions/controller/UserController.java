@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
+
     private UserService userService;
 
     @GetMapping
@@ -23,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserCreationDto createUser(@Valid @RequestBody UserEntity userEntity) {
-        return userService.userCreationDto(userEntity);
+    public UserCreationDto createUser(@Valid @RequestBody UserCreationDto userCreationDto) {
+        return userService.userCreationDto(userCreationDto);
     }
 
     //    I made a mistake of having same endpoint or api point with getAllUser and getUserById
@@ -34,8 +35,8 @@ public class UserController {
     }
 
     @PutMapping
-    public UserRequestDto updateUserById(@RequestParam Long userId, @Valid @RequestBody UserEntity userEntity) {
-        return userService.updateUser(userId, userEntity);
+    public UserRequestDto updateUserById(@RequestParam Long userId, @Valid @RequestBody UserCreationDto userCreationDto) {
+        return userService.updateUser(userId, userCreationDto);
     }
 
     @DeleteMapping
