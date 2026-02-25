@@ -23,7 +23,7 @@ public class UserEntity {
     private String emailId;
 
     @Column(name = "user_pwd")
-    private Long userPwd;
+    private String userPwd;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
