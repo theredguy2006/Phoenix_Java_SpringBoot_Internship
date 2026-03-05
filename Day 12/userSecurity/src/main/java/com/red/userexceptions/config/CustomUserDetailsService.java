@@ -24,10 +24,17 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
+        // Hardcoded ADMIN role for learning purposes
+        String role = "USER";
+
+        if (user.getEmailId().equals("theredguy2006@gmail.com")) {
+            role = "ADMIN";
+        }
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmailId())
                 .password(user.getUserPwd())
-                .roles("USER")
+                .roles(role)
                 .build();
     }
 }

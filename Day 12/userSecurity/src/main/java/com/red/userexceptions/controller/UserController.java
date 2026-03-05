@@ -34,12 +34,12 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @PutMapping
+    @PutMapping("/updatebyid")
     public UserRequestDto updateUserById(@RequestParam Long userId, @Valid @RequestBody UserCreationDto userCreationDto) {
         return userService.updateUser(userId, userCreationDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deletebyid")
     public UserRequestDto deleteUserById(@RequestParam Long userId) {
         return userService.deleteUser(userId);
     }

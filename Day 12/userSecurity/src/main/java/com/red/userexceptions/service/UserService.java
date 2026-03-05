@@ -55,43 +55,68 @@ public class UserService {
 
     public UserRequestDto deleteUser(Long userId) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         UserEntity loggedInUser = getLoggedInUser();
 
-        if (!loggedInUser.getUserId().equals(userId)) {
-            throw new BadRequestException("You can only delete your own account");
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        UserEntity userToDelete = userRepository.findByUserId(userId);
+
+        if (userToDelete == null) {
+            throw new ResourceNotFoundException("User not found with id: " + userId);
         }
 
-        userRepository.delete(loggedInUser);
-        return userMapper.toRequestDto(loggedInUser);
+        if (!loggedInUser.getUserId().equals(userId)) {
+            throw new BadRequestException("You are not allowed to delete user with id " + userId + ". Your userId is " + loggedInUser.getUserId() + ". You can only delete your own account.");
+        }
+
+        userRepository.delete(userToDelete);
+        return userMapper.toRequestDto(userToDelete);
     }
 
     public UserRequestDto updateUser(Long userId, UserCreationDto userCreationDto) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         UserEntity loggedInUser = getLoggedInUser();
 
-        if (!loggedInUser.getUserId().equals(userId)) {
-            throw new BadRequestException("You can only update your own account");
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        UserEntity targetUser;
+
+        if (isAdmin) {
+            targetUser = userRepository.findByUserId(userId);
+            if (targetUser == null) {
+
+                throw new ResourceNotFoundException("User not found with id: " + userId);
+            }
+        } else {
+            if (!loggedInUser.getUserId().equals(userId)) {
+                throw new BadRequestException("You are not allowed to update user with id " + userId + ". Your userId is " + loggedInUser.getUserId() + ". You can only update your own account.");
+            }
+            targetUser = loggedInUser;
         }
 
         if (userCreationDto.getUserName() != null) {
-            loggedInUser.setUserName(userCreationDto.getUserName());
+            targetUser.setUserName(userCreationDto.getUserName());
         }
 
-        if (userCreationDto.getEmailId() != null && !userCreationDto.getEmailId().equals(loggedInUser.getEmailId()) && userRepository.existsByEmailId(userCreationDto.getEmailId())) {
+        if (userCreationDto.getEmailId() != null && !userCreationDto.getEmailId().equals(targetUser.getEmailId()) && userRepository.existsByEmailId(userCreationDto.getEmailId())) {
 
             throw new DuplicateResourceException("Email already exists");
         }
 
         if (userCreationDto.getEmailId() != null) {
-            loggedInUser.setEmailId(userCreationDto.getEmailId());
+            targetUser.setEmailId(userCreationDto.getEmailId());
         }
 
         if (userCreationDto.getUserPwd() != null) {
-            loggedInUser.setUserPwd(passwordEncoder.encode(userCreationDto.getUserPwd()));
+            targetUser.setUserPwd(passwordEncoder.encode(userCreationDto.getUserPwd()));
         }
 
-        userRepository.save(loggedInUser);
-        return userMapper.toRequestDto(loggedInUser);
+        userRepository.save(targetUser);
+        return userMapper.toRequestDto(targetUser);
     }
 
     public UserRequestDto getUserById(Long userId) {
