@@ -1,4 +1,4 @@
-package com.red.userjwt.config;
+package com.red.userjwt.security;
 
 import com.red.userjwt.entity.UserEntity;
 import com.red.userjwt.repository.UserRepository;
